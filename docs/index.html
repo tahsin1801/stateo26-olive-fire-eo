@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StatEO26 Poster #35 — Tahsin Ünal</title>
+  <style>
+    :root {
+      --bg: #f4efe6;
+      --ink: #211b16;
+      --muted: #6f6357;
+      --accent: #8b2f23;
+      --card: #fffaf1;
+      --line: #d8c9b6;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 48px 20px;
+    }
+
+    .hero {
+      border-bottom: 2px solid var(--line);
+      padding-bottom: 28px;
+      margin-bottom: 28px;
+    }
+
+    .kicker {
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-size: 0.85rem;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1.05;
+      margin: 0.2em 0;
+    }
+
+    h2, h3 {
+      margin-top: 0;
+    }
+
+    .subtitle,
+    .author,
+    .muted {
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .card,
+    .tile {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px;
+      margin: 18px 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .metric {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin: 0;
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    footer {
+      margin-top: 32px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <p class="kicker">StatEO26 · ESA-ESRIN · Frascati, Italy · 5–7 May 2026</p>
+      <h1>Operational Earth Observation for Wildfire Damage Assessment in Olive Groves</h1>
+      <p class="subtitle">Supplementary material for Poster #35 · Abstract 144 · Session 1.6</p>
+      <p class="author">Tahsin Ünal · Agricultural Engineer · Court-Appointed Expert Witness</p>
+      <p class="muted">Ministry of Agriculture & Forestry · Aliağa District Directorate · İzmir, Türkiye</p>
+    </section>
+
+    <section class="card">
+      <h2>Purpose</h2>
+      <p>
+        This companion page provides non-confidential methodological material for a court-oriented
+        Earth Observation workflow applied to wildfire damage assessment in traditional Mediterranean
+        olive groves.
+      </p>
+    </section>
+
+    <section class="grid">
+      <div class="tile">
+        <h3>Tree inventory</h3>
+        <p class="metric">161 / 169</p>
+        <p>CHM-detected tree candidates against manual reference inventory.</p>
+      </div>
+
+      <div class="tile">
+        <h3>Strict damaged trees</h3>
+        <p class="metric">65</p>
+        <p>Severe + Moderate classes from per-tree Sentinel-2 dNBR sampling.</p>
+      </div>
+
+      <div class="tile">
+        <h3>Court-accounting estimate</h3>
+        <p class="metric">73 / 169</p>
+        <p>Damaged-tree estimate used in institutional agricultural damage accounting.</p>
+      </div>
+
+      <div class="tile">
+        <h3>Convergent range</h3>
+        <p class="metric">61–73</p>
+        <p>Damaged-tree estimates across methodologically distinct evidence streams.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Methodology overview</h2>
+      <p>
+        The workflow combines UAV photogrammetry, Sentinel-2 burn-severity analysis,
+        field evidence, and court-oriented agricultural damage accounting.
+      </p>
+      <ol>
+        <li>UAV photogrammetry: ODM/SfM reconstruction, orthophoto, DSM/DTM and CHM products.</li>
+        <li>Sentinel-2 analysis: pre/post-fire spectral comparison using vegetation and burn-severity indices.</li>
+        <li>Tree-level interpretation: CHM candidates classified by per-tree dNBR sampling.</li>
+        <li>Institutional assessment: integration of EO evidence with field observations and valuation logic.</li>
+      </ol>
+      <p><strong>No supervised model training was applied.</strong></p>
+    </section>
+
+    <section class="card">
+      <h2>Repository</h2>
+      <p>
+        Source material and updates are available in the GitHub repository:
+        <a href="https://github.com/tahsin1801/stateo26-olive-fire-eo">stateo26-olive-fire-eo</a>.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Disclaimer</h2>
+      <p>
+        This page shares methodological material only. No personal data, judicial proceedings,
+        restricted case-file content, raw UAV imagery, or confidential cadastral evidence is shared.
+        Views expressed are the author's.
+      </p>
+    </section>
+
+    <footer>
+      Ünal, T. (2026). Operational Earth Observation for Wildfire Damage Assessment in Olive Groves:
+      An Integrated Court–Agency Case Study from the Mediterranean Region. StatEO26, ESA-ESRIN,
+      Frascati, Italy. Poster #35, Abstract 144, Session 1.6.
+    </footer>
+  </main>
+</body>
+</html>
