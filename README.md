@@ -19,7 +19,7 @@ The workflow combines UAV photogrammetry, Sentinel-2 burn-severity analysis, fie
 
 Main components:
 
-1. **UAV photogrammetry** — ODM/SfM reconstruction, orthophoto, DSM/DTM and CHM products  
+1. **UAV photogrammetry** — open-source ODM/SfM reconstruction, orthophoto, DSM/DTM and CHM products  
 2. **Sentinel-2 analysis** — pre/post-fire spectral comparison using vegetation and burn-severity indices  
 3. **Tree-level interpretation** — CHM-detected tree candidates classified by per-tree Sentinel-2 dNBR sampling  
 4. **Institutional damage assessment** — integration of EO evidence with field observations and agricultural valuation logic  
@@ -43,24 +43,36 @@ No supervised model training was applied.
 - UAV × Sentinel-2 fusion estimate: **61** damaged trees  
 - CHM + dNBR strict classification: **65** damaged trees  
 - Court-accounting inference: **73** damaged trees  
+- Court-accounting damaged-tree ratio: **43%**  
 - Convergent damaged-tree range: **61–73**  
+
+---
+
+## Supplementary material
+
+- [Method note](docs/methods/method_note.md)  
+- [Data and privacy note](docs/methods/data_privacy_note.md)  
+- [Workflow summary](docs/methods/workflow_summary.md)  
+- [CHM V1 tree detection code outline](docs/code/chm_tree_detection_v1_outline.py)  
 
 ---
 
 ## Repository status
 
 - ✅ Project introduction and key results  
-- 🔄 Method summary — in preparation  
-- 🔄 Workflow diagram — in preparation  
-- 🔄 Non-confidential code outlines — in preparation  
+- ✅ Method note (`docs/methods/method_note.md`)  
+- ✅ Data and privacy note (`docs/methods/data_privacy_note.md`)  
+- ✅ Workflow summary (`docs/methods/workflow_summary.md`)  
+- ✅ CHM V1 code outline (`docs/code/chm_tree_detection_v1_outline.py`)  
+- 🔄 Additional public-safe code outlines — planned post-conference  
 
 ---
 
-## Disclaimer
+## Data and confidentiality
 
 This repository contains methodological material only.
 
-No personal data, judicial proceedings, restricted case-file content, raw UAV imagery, or confidential cadastral evidence is shared.
+No personal data, judicial proceedings, restricted case-file content, raw UAV imagery, full-resolution GeoTIFF products, LAZ/point-cloud files, 3D mesh files, confidential cadastral evidence, or full coordinate datasets are shared.
 
 Views expressed are the author's.
 
