@@ -86,6 +86,15 @@
 
     a {
       color: var(--accent);
+      font-weight: bold;
+    }
+
+    .links {
+      padding-left: 1.2rem;
+    }
+
+    .links li {
+      margin: 0.5rem 0;
     }
 
     footer {
@@ -97,8 +106,10 @@
     }
   </style>
 </head>
+
 <body>
   <main class="page">
+
     <section class="hero">
       <p class="kicker">StatEO26 · ESA-ESRIN · Frascati, Italy · 5–7 May 2026</p>
       <h1>Operational Earth Observation for Wildfire Damage Assessment in Olive Groves</h1>
@@ -148,20 +159,40 @@
         The workflow combines UAV photogrammetry, Sentinel-2 burn-severity analysis,
         field evidence, and court-oriented agricultural damage accounting.
       </p>
+
       <ol>
         <li>UAV photogrammetry: ODM/SfM reconstruction, orthophoto, DSM/DTM and CHM products.</li>
         <li>Sentinel-2 analysis: pre/post-fire spectral comparison using vegetation and burn-severity indices.</li>
         <li>Tree-level interpretation: CHM candidates classified by per-tree dNBR sampling.</li>
         <li>Institutional assessment: integration of EO evidence with field observations and valuation logic.</li>
       </ol>
+
       <p><strong>No supervised model training was applied.</strong></p>
+    </section>
+
+    <section class="card">
+      <h2>Supplementary material</h2>
+      <p>
+        The following non-confidential notes and materials provide additional methodological context
+        for the poster.
+      </p>
+
+      <ul class="links">
+        <li>
+          <a href="https://github.com/tahsin1801/stateo26-olive-fire-eo/blob/main/docs/methods/method_note.md" target="_blank" rel="noopener">
+            Method note
+          </a>
+        </li>
+      </ul>
     </section>
 
     <section class="card">
       <h2>Repository</h2>
       <p>
         Source material and updates are available in the GitHub repository:
-        <a href="https://github.com/tahsin1801/stateo26-olive-fire-eo">stateo26-olive-fire-eo</a>.
+        <a href="https://github.com/tahsin1801/stateo26-olive-fire-eo" target="_blank" rel="noopener">
+          stateo26-olive-fire-eo
+        </a>.
       </p>
     </section>
 
@@ -169,8 +200,8 @@
       <h2>Disclaimer</h2>
       <p>
         This page shares methodological material only. No personal data, judicial proceedings,
-        restricted case-file content, raw UAV imagery, or confidential cadastral evidence is shared.
-        Views expressed are the author's.
+        restricted case-file content, raw UAV imagery, confidential cadastral evidence, or full
+        coordinate datasets are shared. Views expressed are the author's.
       </p>
     </section>
 
@@ -179,6 +210,7 @@
       An Integrated Court–Agency Case Study from the Mediterranean Region. StatEO26, ESA-ESRIN,
       Frascati, Italy. Poster #35, Abstract 144, Session 1.6.
     </footer>
+
   </main>
 </body>
 </html>
