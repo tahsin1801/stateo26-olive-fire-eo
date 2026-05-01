@@ -19,10 +19,10 @@ The workflow combines UAV photogrammetry, Sentinel-2 burn-severity analysis, fie
 
 Main components:
 
-1. **UAV photogrammetry** — open-source ODM/SfM reconstruction, orthophoto, DSM/DTM and CHM products  
-2. **Sentinel-2 analysis** — pre/post-fire spectral comparison using vegetation and burn-severity indices  
-3. **Tree-level interpretation** — CHM-detected tree candidates classified by per-tree Sentinel-2 dNBR sampling  
-4. **Institutional damage assessment** — integration of EO evidence with field observations and agricultural valuation logic  
+1. **UAV photogrammetry** — open-source ODM/SfM reconstruction, orthophoto, DSM/DTM and CHM products
+2. **Sentinel-2 analysis** — pre/post-fire spectral comparison using vegetation and burn-severity indices
+3. **Tree-level interpretation** — CHM-detected tree candidates classified by per-tree Sentinel-2 dNBR sampling
+4. **Institutional damage assessment** — integration of EO evidence with field observations and agricultural valuation logic
 
 No supervised model training was applied.
 
@@ -32,39 +32,39 @@ No supervised model training was applied.
 
 **Tree inventory**
 
-- Manual reference inventory: **169** olive trees  
-- CHM-detected tree candidates: **161**  
-- CHM completeness against manual reference: **95.3%**  
-- Eight trees were locally under-detected in the eastern sparse transition zone  
+- Manual reference inventory: **169** olive trees
+- CHM-detected tree candidates: **161**
+- CHM completeness against manual reference: **95.3%**
+- Eight trees were locally under-detected in the eastern sparse transition zone
 
 **Damage assessment**
 
-- Field walk-through evidence: **63** damaged trees  
-- UAV × Sentinel-2 fusion estimate: **61** damaged trees  
-- CHM + dNBR strict classification: **65** damaged trees  
-- Court-accounting inference: **73** damaged trees  
-- Court-accounting damaged-tree ratio: **43%**  
-- Convergent damaged-tree range: **61–73**  
+- Field walk-through evidence: **63** damaged trees
+- UAV × Sentinel-2 fusion estimate: **61** damaged trees
+- CHM + dNBR strict classification: **65** damaged trees
+- Court-accounting inference: **73** damaged trees
+- Court-accounting damaged-tree ratio: **43%**
+- Convergent damaged-tree range: **61–73**
 
 ---
 
 ## Supplementary material
 
-- [Method note](docs/methods/method_note.md)  
-- [Data and privacy note](docs/methods/data_privacy_note.md)  
-- [Workflow summary](docs/methods/workflow_summary.md)  
-- [CHM V1 tree detection code outline](docs/code/chm_tree_detection_v1_outline.py)  
+- [Method note](docs/methods/method_note.md)
+- [Data and privacy note](docs/methods/data_privacy_note.md)
+- [Workflow summary](docs/methods/workflow_summary.md)
+- [CHM V1 tree detection code outline](docs/code/chm_tree_detection_v1_outline.py)
 
 ---
 
 ## Repository status
 
-- ✅ Project introduction and key results  
-- ✅ Method note (`docs/methods/method_note.md`)  
-- ✅ Data and privacy note (`docs/methods/data_privacy_note.md`)  
-- ✅ Workflow summary (`docs/methods/workflow_summary.md`)  
-- ✅ CHM V1 code outline (`docs/code/chm_tree_detection_v1_outline.py`)  
-- 🔄 Additional public-safe code outlines — planned post-conference  
+- ✅ Project introduction and key results
+- ✅ Method note (`docs/methods/method_note.md`)
+- ✅ Data and privacy note (`docs/methods/data_privacy_note.md`)
+- ✅ Workflow summary (`docs/methods/workflow_summary.md`)
+- ✅ CHM V1 code outline (`docs/code/chm_tree_detection_v1_outline.py`)
+- 🔄 Additional public-safe code outlines — planned post-conference
 
 ---
 
