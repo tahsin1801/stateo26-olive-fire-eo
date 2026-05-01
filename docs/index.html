@@ -2,364 +2,789 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>StatEO26 Poster #35 — Tahsin Ünal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f4efe6">
+  <meta name="description" content="StatEO26 Poster #35 — Operational Earth Observation for wildfire damage assessment in Mediterranean olive groves. Tahsin Ünal, ESA-ESRIN Frascati, May 2026.">
+  <title>StatEO26 Poster #35 — Operational EO for Olive Grove Wildfire Damage</title>
+
+  <!-- Distinctive serif + refined sans pairing -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
       --bg: #f4efe6;
-      --ink: #211b16;
+      --bg-deep: #ebe2d3;
+      --ink: #1a1410;
+      --ink-soft: #3a302a;
       --muted: #6f6357;
       --accent: #8b2f23;
+      --accent-deep: #5e1f17;
+      --accent-soft: #c97461;
       --card: #fffaf1;
+      --card-edge: #d8c9b6;
       --line: #d8c9b6;
+      --line-soft: #e8dcc9;
+
+      /* Typography scale */
+      --display: "Fraunces", "Times New Roman", Georgia, serif;
+      --body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
+    @media (prefers-color-scheme: dark) {
+      /* Light theme by design choice — academic/editorial aesthetic */
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
     }
 
     body {
       margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: var(--body);
       background: var(--bg);
       color: var(--ink);
-      line-height: 1.6;
+      line-height: 1.55;
       font-size: 16px;
+      font-feature-settings: "kern", "liga", "ss01";
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background-image:
+        radial-gradient(circle at 20% 0%, rgba(139, 47, 35, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 80% 100%, rgba(139, 47, 35, 0.03) 0%, transparent 40%);
+      background-attachment: fixed;
+    }
+
+    /* Subtle paper texture */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.6 0 0 0 0 0.5 0 0 0 0 0.4 0 0 0 0.04 0'/></filter><rect width='100' height='100' filter='url(%23n)'/></svg>");
+      opacity: 0.5;
+      mix-blend-mode: multiply;
     }
 
     .page {
       width: 100%;
       max-width: 980px;
       margin: 0 auto;
-      padding: 48px 20px;
+      padding: 56px 24px 48px;
+      position: relative;
+      z-index: 1;
     }
 
+    /* === HERO === */
     .hero {
-      border-bottom: 2px solid var(--line);
-      padding-bottom: 28px;
-      margin-bottom: 28px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 32px;
+      margin-bottom: 36px;
     }
 
     .kicker {
-      letter-spacing: 0.12em;
+      font-family: var(--body);
+      font-weight: 600;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--accent);
-      font-size: 0.85rem;
+      font-size: 0.72rem;
       line-height: 1.5;
+      margin: 0 0 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 10px;
+      align-items: center;
+    }
+
+    .kicker .dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.5;
+      flex-shrink: 0;
     }
 
     h1 {
-      font-size: clamp(2.2rem, 5vw, 4rem);
-      line-height: 1.05;
-      margin: 0.2em 0;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: clamp(1.75rem, 5.8vw, 2.4rem);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+      margin: 0 0 22px;
       max-width: 900px;
+      text-wrap: balance;
     }
 
-    h2,
-    h3 {
-      margin-top: 0;
-      line-height: 1.25;
-    }
-
-    .subtitle,
-    .author,
-    .muted {
-      color: var(--muted);
-      font-size: 1.05rem;
-    }
-
-    .card,
-    .tile {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 22px;
-      margin: 18px 0;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-    }
-
-    .metric {
-      font-size: 2rem;
-      font-weight: bold;
+    h1 em {
+      font-style: italic;
+      font-weight: 400;
       color: var(--accent);
-      margin: 0;
-      line-height: 1.15;
     }
 
-    a {
-      color: var(--accent);
-      font-weight: bold;
-    }
-
-    .links {
-      padding-left: 1.2rem;
-    }
-
-    .links li {
-      margin: 0.65rem 0;
-      line-height: 1.45;
-    }
-
-    footer {
-      margin-top: 32px;
+    .subtitle {
+      font-family: var(--body);
+      font-weight: 500;
       color: var(--muted);
       font-size: 0.95rem;
-      border-top: 1px solid var(--line);
-      padding-top: 18px;
+      letter-spacing: 0.02em;
+      margin: 0 0 24px;
+    }
+
+    .author-block {
+      padding-top: 16px;
+      border-top: 1px solid var(--line-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .author {
+      font-family: var(--display);
+      font-weight: 600;
+      color: var(--ink);
+      font-size: 1.05rem;
+      letter-spacing: -0.01em;
+    }
+
+    .author-role {
+      font-size: 0.85rem;
+      color: var(--muted);
+      letter-spacing: 0.01em;
+    }
+
+    .affiliation {
+      font-size: 0.82rem;
+      color: var(--muted);
       line-height: 1.5;
     }
 
-    @media (max-width: 700px) {
-      body {
-        font-size: 16px;
-      }
+    /* === SECTION TITLES === */
+    h2 {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+      letter-spacing: -0.015em;
+      margin: 0 0 14px;
+      line-height: 1.2;
+      color: var(--ink);
+    }
 
+    h2 em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--accent);
+    }
+
+    h3 {
+      font-family: var(--body);
+      font-weight: 600;
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 8px;
+      line-height: 1.3;
+    }
+
+    /* === CARD === */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-edge);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 18px 0;
+      box-shadow: 0 1px 0 rgba(26, 20, 16, 0.02);
+    }
+
+    .card p {
+      margin: 0 0 12px;
+      color: var(--ink-soft);
+      font-size: 0.96rem;
+      line-height: 1.6;
+    }
+
+    .card p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* === METRIC GRID === */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin: 18px 0 24px;
+    }
+
+    .tile {
+      background: var(--card);
+      border: 1px solid var(--card-edge);
+      border-radius: 14px;
+      padding: 20px 18px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .tile::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--accent);
+      opacity: 0.85;
+    }
+
+    .tile h3 {
+      margin-bottom: 10px;
+    }
+
+    .metric {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: clamp(2rem, 7vw, 2.6rem);
+      color: var(--accent);
+      margin: 0 0 6px;
+      line-height: 1;
+      letter-spacing: -0.025em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .metric .frac {
+      font-size: 0.7em;
+      color: var(--accent-deep);
+      opacity: 0.85;
+    }
+
+    .metric .endash {
+      font-weight: 400;
+    }
+
+    .tile p {
+      margin: 0;
+      font-size: 0.84rem;
+      line-height: 1.45;
+      color: var(--ink-soft);
+    }
+
+    /* === LIST STYLING === */
+    .card ol,
+    .card ul {
+      padding-left: 0;
+      list-style: none;
+      margin: 8px 0 0;
+      counter-reset: step;
+    }
+
+    .card ol li {
+      position: relative;
+      padding: 10px 0 10px 38px;
+      border-bottom: 1px solid var(--line-soft);
+      counter-increment: step;
+      font-size: 0.94rem;
+      line-height: 1.55;
+      color: var(--ink-soft);
+    }
+
+    .card ol li:last-child {
+      border-bottom: none;
+    }
+
+    .card ol li::before {
+      content: counter(step, decimal-leading-zero);
+      position: absolute;
+      left: 0;
+      top: 11px;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 0.82rem;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+
+    .emphasis {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 8px 14px;
+      background: var(--bg-deep);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    /* === LINKS === */
+    .links {
+      list-style: none;
+      padding: 0;
+      margin: 16px 0 0;
+    }
+
+    .links li {
+      margin: 0;
+    }
+
+    .link-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line-soft);
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.96rem;
+      transition: color 0.15s ease, padding 0.15s ease;
+      min-height: 48px; /* iOS touch target */
+    }
+
+    .link-row:last-child {
+      border-bottom: none;
+    }
+
+    .link-row:hover,
+    .link-row:focus-visible {
+      color: var(--accent);
+      outline: none;
+    }
+
+    .link-row:active {
+      color: var(--accent-deep);
+    }
+
+    .link-label {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .link-arrow {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      transition: transform 0.2s ease;
+    }
+
+    .link-row:hover .link-arrow {
+      transform: translateX(3px);
+    }
+
+    .link-prefix {
+      display: block;
+      font-family: var(--body);
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    /* === REPO BLOCK === */
+    .repo-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      padding: 14px 18px;
+      background: var(--ink);
+      color: var(--bg);
+      border-radius: 12px;
+      text-decoration: none;
+      font-family: var(--body);
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: background 0.15s ease, transform 0.15s ease;
+      min-height: 48px;
+    }
+
+    .repo-link:hover {
+      background: var(--accent-deep);
+    }
+
+    .repo-link:active {
+      transform: scale(0.98);
+    }
+
+    .repo-link svg {
+      flex-shrink: 0;
+    }
+
+    .repo-link .repo-path {
+      font-family: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+
+    /* === DISCLAIMER === */
+    .disclaimer {
+      background: transparent;
+      border: 1px dashed var(--card-edge);
+    }
+
+    .disclaimer h2 {
+      font-size: 1.1rem;
+    }
+
+    .disclaimer p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* === FOOTER === */
+    footer {
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 2px solid var(--line);
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      font-family: var(--body);
+    }
+
+    .citation-label {
+      font-family: var(--body);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    footer p {
+      margin: 0;
+      font-style: italic;
+      font-family: var(--display);
+      font-size: 0.92rem;
+      color: var(--ink-soft);
+      line-height: 1.55;
+    }
+
+    /* === DESKTOP === */
+    @media (min-width: 768px) {
       .page {
-        padding: 28px 14px;
+        padding: 80px 40px 60px;
       }
 
       .hero {
-        padding-bottom: 22px;
-        margin-bottom: 22px;
-      }
-
-      .kicker {
-        font-size: 0.72rem;
-        letter-spacing: 0.09em;
+        padding-bottom: 40px;
+        margin-bottom: 48px;
       }
 
       h1 {
-        font-size: clamp(2rem, 10vw, 2.85rem);
+        font-size: clamp(2.4rem, 5.5vw, 3.8rem);
         line-height: 1.02;
-        margin-top: 0.25em;
-        margin-bottom: 0.35em;
+        margin-bottom: 24px;
       }
 
-      h2 {
-        font-size: 1.35rem;
+      .kicker {
+        font-size: 0.78rem;
       }
 
-      h3 {
-        font-size: 1rem;
+      .author-block {
+        flex-direction: row;
+        align-items: baseline;
+        gap: 16px;
+        flex-wrap: wrap;
       }
 
-      .subtitle,
-      .author,
-      .muted {
-        font-size: 0.95rem;
-        line-height: 1.45;
+      .author {
+        font-size: 1.15rem;
       }
 
-      .card,
+      .author-role {
+        font-size: 0.92rem;
+      }
+
+      .affiliation {
+        width: 100%;
+        font-size: 0.88rem;
+      }
+
+      .metrics {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+      }
+
       .tile {
-        border-radius: 15px;
-        padding: 16px;
-        margin: 14px 0;
+        padding: 24px;
       }
 
-      .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
+      .card {
+        padding: 32px;
+        margin: 24px 0;
       }
 
       .metric {
-        font-size: 1.5rem;
+        font-size: clamp(2.2rem, 4vw, 2.8rem);
       }
 
       .tile p {
         font-size: 0.88rem;
-        line-height: 1.45;
       }
 
-      .card p,
-      .card li {
-        font-size: 0.95rem;
-        line-height: 1.55;
-      }
-
-      .links {
-        padding-left: 1rem;
-      }
-
-      .links li {
-        margin: 0.85rem 0;
-      }
-
-      .links a {
+      .link-row {
+        padding: 18px 0;
         font-size: 1rem;
-      }
-
-      footer {
-        font-size: 0.85rem;
-        line-height: 1.5;
       }
     }
 
-    @media (max-width: 420px) {
+    /* === LARGE DESKTOP === */
+    @media (min-width: 1100px) {
       .page {
-        padding: 24px 12px;
+        padding: 96px 60px 80px;
+      }
+    }
+
+    /* === SMALL MOBILE === */
+    @media (max-width: 380px) {
+      .page {
+        padding: 36px 16px 32px;
+      }
+
+      .kicker {
+        font-size: 0.65rem;
+        letter-spacing: 0.14em;
       }
 
       h1 {
-        font-size: clamp(1.9rem, 11vw, 2.55rem);
+        font-size: clamp(1.65rem, 6.5vw, 1.95rem);
+        line-height: 1.08;
       }
 
-      .grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
+      .card {
+        padding: 18px;
       }
 
-      .card,
       .tile {
-        padding: 14px;
+        padding: 16px 14px;
       }
 
       .metric {
-        font-size: 1.35rem;
+        font-size: 1.7rem;
       }
 
       .tile p {
-        font-size: 0.82rem;
+        font-size: 0.78rem;
       }
     }
+
+    /* === REDUCED MOTION === */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* === PRINT === */
+    @media print {
+      body { background: white; color: black; }
+      body::before { display: none; }
+      .page { max-width: 100%; padding: 0; }
+      .card, .tile { border: 1px solid #999; box-shadow: none; }
+      .metric { color: #333; }
+      a { color: black; text-decoration: underline; }
+      .link-arrow, .repo-link { display: none; }
+    }
+
+    /* === FOCUS STATES === */
+    a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    /* === FADE IN === */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero, .card, .metrics {
+      animation: fadeUp 0.5s ease-out backwards;
+    }
+
+    .hero { animation-delay: 0.05s; }
+    .card:nth-of-type(1) { animation-delay: 0.1s; }
+    .metrics { animation-delay: 0.15s; }
+    .card:nth-of-type(2) { animation-delay: 0.2s; }
+    .card:nth-of-type(3) { animation-delay: 0.25s; }
+    .card:nth-of-type(4) { animation-delay: 0.3s; }
   </style>
 </head>
 
 <body>
   <main class="page">
 
-    <section class="hero">
-      <p class="kicker">StatEO26 · ESA-ESRIN · Frascati, Italy · 5–7 May 2026</p>
+    <!-- HERO -->
+    <header class="hero">
+      <p class="kicker">
+        <span>StatEO26</span>
+        <span class="dot"></span>
+        <span>ESA-ESRIN</span>
+        <span class="dot"></span>
+        <span>Frascati, Italy</span>
+        <span class="dot"></span>
+        <span>5–7 May 2026</span>
+      </p>
 
-      <h1>Operational Earth Observation for Wildfire Damage Assessment in Olive Groves</h1>
+      <h1>Operational <em>Earth Observation</em> for Wildfire Damage Assessment in Olive Groves</h1>
 
-      <p class="subtitle">Supplementary material for Poster #35 · Abstract 144 · Session 1.6</p>
+      <p class="subtitle">Supplementary material · Poster #35 · Abstract 144 · Session 1.6</p>
 
-      <p class="author">Tahsin Ünal · Agricultural Engineer · Court-Appointed Expert Witness</p>
+      <div class="author-block">
+        <span class="author">Tahsin Ünal</span>
+        <span class="author-role">Agricultural Engineer · Court-Appointed Expert Witness</span>
+        <span class="affiliation">Ministry of Agriculture & Forestry · Aliağa District Directorate · İzmir, Türkiye</span>
+      </div>
+    </header>
 
-      <p class="muted">Ministry of Agriculture & Forestry · Aliağa District Directorate · İzmir, Türkiye</p>
-    </section>
-
+    <!-- PURPOSE -->
     <section class="card">
       <h2>Purpose</h2>
-
-      <p>
-        This companion page provides non-confidential methodological material for a court-oriented
-        Earth Observation workflow applied to wildfire damage assessment in traditional Mediterranean
-        olive groves.
-      </p>
+      <p>This companion page provides non-confidential methodological material for a court-oriented Earth Observation workflow applied to wildfire damage assessment in traditional Mediterranean olive groves.</p>
     </section>
 
-    <section class="grid">
+    <!-- METRICS -->
+    <section class="metrics" aria-label="Key results">
       <div class="tile">
-        <h3>Tree inventory</h3>
-        <p class="metric">161 / 169</p>
-        <p>CHM-detected candidates / manual reference inventory; 95.3% completeness.</p>
+        <h3>Tree Inventory</h3>
+        <p class="metric">161<span class="frac"> / 169</span></p>
+        <p>CHM-detected candidates against manual reference; 95.3% completeness.</p>
       </div>
 
       <div class="tile">
-        <h3>Strict damaged trees</h3>
+        <h3>Strict Damaged</h3>
         <p class="metric">65</p>
         <p>Severe + Moderate classes from per-tree Sentinel-2 dNBR sampling.</p>
       </div>
 
       <div class="tile">
-        <h3>Court-accounting estimate</h3>
-        <p class="metric">73 / 169</p>
-        <p>Court-accounting estimate for institutional agricultural damage assessment; 43%.</p>
+        <h3>Court-Accounting</h3>
+        <p class="metric">73<span class="frac"> / 169</span></p>
+        <p>Court-accounting estimate for institutional agricultural damage; 43%.</p>
       </div>
 
       <div class="tile">
-        <h3>Convergent range</h3>
-        <p class="metric">61–73</p>
+        <h3>Convergent Range</h3>
+        <p class="metric">61<span class="endash">–</span>73</p>
         <p>Damaged-tree estimates across methodologically distinct evidence streams.</p>
       </div>
     </section>
 
+    <!-- METHODOLOGY -->
     <section class="card">
-      <h2>Methodology overview</h2>
-
-      <p>
-        The workflow combines UAV photogrammetry, Sentinel-2 burn-severity analysis,
-        field evidence, and court-oriented agricultural damage accounting.
-      </p>
+      <h2>Methodology <em>overview</em></h2>
+      <p>The workflow combines UAV photogrammetry, Sentinel-2 burn-severity analysis, field evidence, and court-oriented agricultural damage accounting.</p>
 
       <ol>
-        <li>UAV photogrammetry: open-source ODM/SfM reconstruction, orthophoto, DSM/DTM and CHM products.</li>
-        <li>Sentinel-2 analysis: pre/post-fire spectral comparison using vegetation and burn-severity indices.</li>
-        <li>Tree-level interpretation: CHM candidates classified by per-tree dNBR sampling.</li>
-        <li>Institutional assessment: integration of EO evidence with field observations and valuation logic.</li>
+        <li><strong>UAV photogrammetry</strong> — open-source ODM/SfM reconstruction, orthophoto, DSM/DTM and CHM products.</li>
+        <li><strong>Sentinel-2 analysis</strong> — pre/post-fire spectral comparison using vegetation and burn-severity indices.</li>
+        <li><strong>Tree-level interpretation</strong> — CHM candidates classified by per-tree dNBR sampling.</li>
+        <li><strong>Institutional assessment</strong> — integration of EO evidence with field observations and valuation logic.</li>
       </ol>
 
-      <p><strong>No supervised model training was applied.</strong></p>
+      <span class="emphasis">No supervised model training was applied.</span>
     </section>
 
+    <!-- SUPPLEMENTARY LINKS -->
     <section class="card">
-      <h2>Supplementary material</h2>
-
-      <p>
-        The following non-confidential notes, workflow summaries, and public-safe code outlines
-        provide additional methodological context for the poster.
-      </p>
+      <h2>Supplementary <em>material</em></h2>
+      <p>Non-confidential notes, workflow summaries, and public-safe code outlines providing additional methodological context.</p>
 
       <ul class="links">
         <li>
-          <a href="https://github.com/tahsin1801/stateo26-olive-fire-eo/blob/main/docs/methods/method_note.md" target="_blank" rel="noopener">
-            Method note
+          <a class="link-row" href="https://github.com/tahsin1801/stateo26-olive-fire-eo/blob/main/docs/methods/method_note.md" target="_blank" rel="noopener">
+            <span class="link-label">
+              <span class="link-prefix">Method</span>
+              Method note
+            </span>
+            <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
           </a>
         </li>
 
         <li>
-          <a href="https://github.com/tahsin1801/stateo26-olive-fire-eo/blob/main/docs/methods/data_privacy_note.md" target="_blank" rel="noopener">
-            Data and privacy note
+          <a class="link-row" href="https://github.com/tahsin1801/stateo26-olive-fire-eo/blob/main/docs/methods/data_privacy_note.md" target="_blank" rel="noopener">
+            <span class="link-label">
+              <span class="link-prefix">Privacy</span>
+              Data and privacy note
+            </span>
+            <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
           </a>
         </li>
 
         <li>
-          <a href="https://github.com/tahsin1801/stateo26-olive-fire-eo/blob/main/docs/methods/workflow_summary.md" target="_blank" rel="noopener">
-            Workflow summary
+          <a class="link-row" href="https://github.com/tahsin1801/stateo26-olive-fire-eo/blob/main/docs/methods/workflow_summary.md" target="_blank" rel="noopener">
+            <span class="link-label">
+              <span class="link-prefix">Workflow</span>
+              Workflow summary
+            </span>
+            <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
           </a>
         </li>
 
         <li>
-          <a href="https://github.com/tahsin1801/stateo26-olive-fire-eo/blob/main/docs/code/chm_tree_detection_v1_outline.py" target="_blank" rel="noopener">
-            Code outline: CHM tree detection V1
+          <a class="link-row" href="https://github.com/tahsin1801/stateo26-olive-fire-eo/blob/main/docs/code/chm_tree_detection_v1_outline.py" target="_blank" rel="noopener">
+            <span class="link-label">
+              <span class="link-prefix">Code</span>
+              CHM V1 tree detection outline
+            </span>
+            <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
           </a>
         </li>
       </ul>
     </section>
 
+    <!-- REPOSITORY -->
     <section class="card">
       <h2>Repository</h2>
+      <p>Source material, supplementary documents, and post-conference updates are maintained in the public repository.</p>
 
-      <p>
-        Source material and updates are available in the GitHub repository:
-        <a href="https://github.com/tahsin1801/stateo26-olive-fire-eo" target="_blank" rel="noopener">
-          stateo26-olive-fire-eo
-        </a>.
-      </p>
+      <a class="repo-link" href="https://github.com/tahsin1801/stateo26-olive-fire-eo" target="_blank" rel="noopener">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+        </svg>
+        <span>tahsin1801</span>
+        <span class="repo-path">/stateo26-olive-fire-eo</span>
+      </a>
     </section>
 
-    <section class="card">
-      <h2>Disclaimer</h2>
-
-      <p>
-        This page shares methodological material only. No personal data, judicial proceedings,
-        restricted case-file content, raw UAV imagery, confidential cadastral evidence, or full
-        coordinate datasets are shared. Views expressed are the author's.
-      </p>
+    <!-- DISCLAIMER -->
+    <section class="card disclaimer">
+      <h2>Data and confidentiality</h2>
+      <p>This page shares methodological material only. No personal data, judicial proceedings, restricted case-file content, raw UAV imagery, full-resolution GeoTIFF products, LAZ or point-cloud files, 3D mesh files, confidential cadastral evidence, or full coordinate datasets are shared. Views expressed are the author's.</p>
     </section>
 
+    <!-- FOOTER / CITATION -->
     <footer>
-      Ünal, T. (2026). Operational Earth Observation for Wildfire Damage Assessment in Olive Groves:
-      An Integrated Court–Agency Case Study from the Mediterranean Region. StatEO26, ESA-ESRIN,
-      Frascati, Italy. Poster #35, Abstract 144, Session 1.6.
+      <span class="citation-label">How to cite</span>
+      <p>Ünal, T. (2026). Operational Earth Observation for Wildfire Damage Assessment in Olive Groves: An Integrated Court–Agency Case Study from the Mediterranean Region. StatEO26 — Earth Observation for Official Statistics, ESA-ESRIN, Frascati, Italy. Poster #35, Abstract 144, Session 1.6.</p>
     </footer>
 
   </main>
