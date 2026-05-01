@@ -25,9 +25,11 @@
       background: var(--bg);
       color: var(--ink);
       line-height: 1.6;
+      font-size: 16px;
     }
 
     .page {
+      width: 100%;
       max-width: 980px;
       margin: 0 auto;
       padding: 48px 20px;
@@ -44,17 +46,20 @@
       text-transform: uppercase;
       color: var(--accent);
       font-size: 0.85rem;
+      line-height: 1.5;
     }
 
     h1 {
-      font-size: clamp(2rem, 5vw, 4rem);
+      font-size: clamp(2.2rem, 5vw, 4rem);
       line-height: 1.05;
       margin: 0.2em 0;
+      max-width: 900px;
     }
 
     h2,
     h3 {
       margin-top: 0;
+      line-height: 1.25;
     }
 
     .subtitle,
@@ -84,6 +89,7 @@
       font-weight: bold;
       color: var(--accent);
       margin: 0;
+      line-height: 1.15;
     }
 
     a {
@@ -96,7 +102,8 @@
     }
 
     .links li {
-      margin: 0.5rem 0;
+      margin: 0.65rem 0;
+      line-height: 1.45;
     }
 
     footer {
@@ -105,6 +112,121 @@
       font-size: 0.95rem;
       border-top: 1px solid var(--line);
       padding-top: 18px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 700px) {
+      body {
+        font-size: 16px;
+      }
+
+      .page {
+        padding: 28px 14px;
+      }
+
+      .hero {
+        padding-bottom: 22px;
+        margin-bottom: 22px;
+      }
+
+      .kicker {
+        font-size: 0.72rem;
+        letter-spacing: 0.09em;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 10vw, 2.85rem);
+        line-height: 1.02;
+        margin-top: 0.25em;
+        margin-bottom: 0.35em;
+      }
+
+      h2 {
+        font-size: 1.35rem;
+      }
+
+      h3 {
+        font-size: 1rem;
+      }
+
+      .subtitle,
+      .author,
+      .muted {
+        font-size: 0.95rem;
+        line-height: 1.45;
+      }
+
+      .card,
+      .tile {
+        border-radius: 15px;
+        padding: 16px;
+        margin: 14px 0;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .metric {
+        font-size: 1.5rem;
+      }
+
+      .tile p {
+        font-size: 0.88rem;
+        line-height: 1.45;
+      }
+
+      .card p,
+      .card li {
+        font-size: 0.95rem;
+        line-height: 1.55;
+      }
+
+      .links {
+        padding-left: 1rem;
+      }
+
+      .links li {
+        margin: 0.85rem 0;
+      }
+
+      .links a {
+        font-size: 1rem;
+      }
+
+      footer {
+        font-size: 0.85rem;
+        line-height: 1.5;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .page {
+        padding: 24px 12px;
+      }
+
+      h1 {
+        font-size: clamp(1.9rem, 11vw, 2.55rem);
+      }
+
+      .grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .card,
+      .tile {
+        padding: 14px;
+      }
+
+      .metric {
+        font-size: 1.35rem;
+      }
+
+      .tile p {
+        font-size: 0.82rem;
+      }
     }
   </style>
 </head>
