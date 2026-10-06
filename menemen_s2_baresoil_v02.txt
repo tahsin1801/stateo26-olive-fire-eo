@@ -1,0 +1,387 @@
+// ============================================================
+// MENEMEN OVASI — SENTINEL-2 KURU ÇIPLAK TOPRAK GÖZLENEBİLİRLİĞİ
+// (dry bare-soil observability)
+// Dönem: 28.03.2017 - 31.12.2019
+//
+// v02 — 2026-10-06 — değişiklik: günlük deduplikasyon (aynı takvim günü
+//        = 1 gözlem), EPSG:32635 sabit, yıllık (2017/18/19) valid/bare
+//        sayıları, mevsim ve ay dağılımı, duyarlılık katmanları (ayrı
+//        asset), keyfi eşikler (>=3 gözlem / >=2 yıl / >=6 valid) kaldırıldı.
+// v01 — 2026-10-05 — ilk sürüm: tile bazlı sayım, Maske A/B, repeated_A/B.
+//
+// ANA MASKELER (abstractla tutarlı, DEĞİŞMEDİ):
+//   MASKE A: SCL==5 & NDVI(B8A,B4)<0.25 & NDMI(B8A,B11)<0
+//   MASKE B: MASKE A & NBR2(B11,B12)<0.075
+//   valid  : SCL in {4,5}
+//
+// GÖZLEM TANIMI: Aynı UTC takvim gününde birden fazla granül varsa
+//   (tile örtüşmesi) piksel için band bazında MAX alınır: o gün herhangi
+//   bir granülde geçerli/çıplak görülmüşse o gün 1 gözlem sayılır.
+//
+// DUYARLILIK (ayrı asset, ana analizi değiştirmez):
+//   S1 bareA_ndvi8   : NDVI'yi B8/B4 ile hesapla (diğer koşullar aynı)
+//   S2 bareA_noSCL5  : SCL==5 koşulu yok; valid_alt = SCL in {2,4,5}
+//                      (SCL-kaynaklı kuru-toprak seçim yanlılığını ölçer)
+//
+// MEVSİM (meteorolojik): winter=12,1,2 spring=3,4,5 summer=6,7,8 autumn=9,10,11
+// NOT: 2017 eksik yıl (28 Mart başlangıç; 2017 kış-ilkbahar başı yok).
+//
+// ÇIKTILAR (3 Asset image + 1 Asset tablo):
+//   _v2           : ana sayımlar/frekanslar (28 bant)
+//   _v2_monthly   : ay bazlı valid/bareA/bareB (36 bant)
+//   _v2_sens      : duyarlılık katmanları
+//   _v2_summary   : AOI özet istatistikleri (mean + yüzdelikler)
+// ============================================================
+
+
+// ------------------------------------------------------------
+// 1. AOI
+// ------------------------------------------------------------
+
+var menemenFC = ee.FeatureCollection(
+  'projects/tarim-analiz-2025/assets/Menemen_Ovasi_Gediz_RG2017_AOI'
+);
+var aoi = menemenFC.geometry();
+
+Map.centerObject(menemenFC, 11);
+Map.addLayer(
+  menemenFC.style({color: 'FF0000', fillColor: '00000000', width: 2}),
+  {}, 'Menemen Ovası'
+);
+
+
+// ------------------------------------------------------------
+// 2. SABİTLER
+// ------------------------------------------------------------
+
+var START = '2017-03-28';
+var END   = '2020-01-01';          // END hariç
+var YEARS = [2017, 2018, 2019];
+var SEASONS = ['winter', 'spring', 'summer', 'autumn'];
+var SEASON_OF_MONTH = ee.List([
+  'winter', 'winter',                // 1, 2
+  'spring', 'spring', 'spring',      // 3, 4, 5
+  'summer', 'summer', 'summer',      // 6, 7, 8
+  'autumn', 'autumn', 'autumn',      // 9, 10, 11
+  'winter'                           // 12
+]);
+
+var CRS = 'EPSG:32635';            // UTM 35N
+var SCALE = 20;                    // SCL / B11 / B12 / B8A ortak 20 m grid
+
+var ASSET_PREFIX = 'projects/tarim-analiz-2025/assets/Menemen_S2_BareSoil_2017_2019_v2';
+
+
+// ------------------------------------------------------------
+// 3. KOLEKSİYON
+// ------------------------------------------------------------
+// CLOUDY_PIXEL_PERCENTAGE<95 yalnızca hesap yükü içindir.
+// Piksel düzeyi kalite kontrol SCL iledir.
+
+var s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
+  .filterBounds(aoi)
+  .filterDate(START, END)
+  .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 95));
+
+print('Kullanılan S2 granül sayısı:', s2.size());
+
+
+// ------------------------------------------------------------
+// 4. GRANÜL DÜZEYİ MASKELER (ikili bantlar)
+// ------------------------------------------------------------
+
+function prepareImage(img) {
+
+  var scl = img.select('SCL');
+
+  // Ana analiz: B8A (20 m) tabanlı NDVI/NDMI
+  var ndvi  = img.normalizedDifference(['B8A', 'B4']);
+  var ndmi  = img.normalizedDifference(['B8A', 'B11']);
+  var nbr2  = img.normalizedDifference(['B11', 'B12']);
+
+  // Duyarlılık: B8 (10 m) tabanlı NDVI
+  var ndvi8 = img.normalizedDifference(['B8', 'B4']);
+
+  var scl5 = scl.eq(5);
+  var valid = scl.eq(4).or(scl5);
+
+  // MASKE A / B
+  var bareA = scl5.and(ndvi.lt(0.25)).and(ndmi.lt(0));
+  var bareB = bareA.and(nbr2.lt(0.075));
+
+  // S1: NDVI = B8/B4
+  var bareA_ndvi8 = scl5.and(ndvi8.lt(0.25)).and(ndmi.lt(0));
+
+  // S2: SCL==5 koşulu yok; SCL 2 (dark area) dahil, SCL 6 (su) HARİÇ
+  // (su pikselleri NDVI<0.25 & NDMI<0 testini geçer; bilinçli dışlandı)
+  var validAlt = valid.or(scl.eq(2));
+  var bareA_noSCL5 = validAlt.and(ndvi.lt(0.25)).and(ndmi.lt(0));
+
+  return ee.Image.cat([
+      valid.rename('valid'),
+      bareA.rename('bareA'),
+      bareB.rename('bareB'),
+      validAlt.rename('validAlt'),
+      bareA_ndvi8.rename('bareA_ndvi8'),
+      bareA_noSCL5.rename('bareA_noSCL5')
+    ])
+    .unmask(0)
+    .toByte();
+}
+
+
+// ------------------------------------------------------------
+// 5. GÜNLÜK MOZAİK (aynı takvim günü = 1 gözlem)
+// ------------------------------------------------------------
+
+var dayList = s2
+  .aggregate_array('system:time_start')
+  .map(function(ms) {
+    return ee.Date(ms).format('YYYY-MM-dd');
+  })
+  .distinct()
+  .sort();
+
+var daily = ee.ImageCollection.fromImages(
+  dayList.map(function(d) {
+    var t = ee.Date(d);
+    var group = s2.filterDate(t, t.advance(1, 'day'));
+    var month = ee.Number(t.get('month'));
+    return group
+      .map(prepareImage)
+      .max()
+      .set({
+        'day': d,
+        'system:time_start': t.millis(),
+        'year': t.get('year'),
+        'month': month,
+        'season': SEASON_OF_MONTH.get(month.subtract(1)),
+        'n_granules': group.size()
+      });
+  })
+);
+
+print('Günlük gözlem (tarih) sayısı:', daily.size());
+print('Günlük mozaikteki granül sayısı dağılımı:',
+      daily.aggregate_histogram('n_granules'));
+
+
+// ------------------------------------------------------------
+// 6. SAYIM YARDIMCILARI
+// ------------------------------------------------------------
+
+function sumBand(col, band, newName) {
+  return col.select(band).sum().rename(newName);
+}
+
+function byYear(y)      { return daily.filter(ee.Filter.eq('year', y)); }
+function bySeason(s)    { return daily.filter(ee.Filter.eq('season', s)); }
+function byMonth(m)     { return daily.filter(ee.Filter.eq('month', m)); }
+
+function pad2(m) { return (m < 10 ? '0' : '') + m; }
+
+
+// ------------------------------------------------------------
+// 7. ANA SAYIMLAR
+// ------------------------------------------------------------
+
+// Yıllık
+var validY = YEARS.map(function(y) { return sumBand(byYear(y), 'valid', 'valid_' + y); });
+var bareAY = YEARS.map(function(y) { return sumBand(byYear(y), 'bareA', 'bareA_' + y); });
+var bareBY = YEARS.map(function(y) { return sumBand(byYear(y), 'bareB', 'bareB_' + y); });
+
+// Toplam
+var validTotal = sumBand(daily, 'valid', 'valid_total');
+var bareATotal = sumBand(daily, 'bareA', 'bareA_total');
+var bareBTotal = sumBand(daily, 'bareB', 'bareB_total');
+
+// Frekans = bare / valid (gün bazlı)
+var bareAFreq = bareATotal.divide(validTotal)
+  .updateMask(validTotal.gt(0)).rename('bareA_freq');
+var bareBFreq = bareBTotal.divide(validTotal)
+  .updateMask(validTotal.gt(0)).rename('bareB_freq');
+
+// Kaç farklı yılda en az 1 çıplak gözlem?
+function yearsWith(bandImgs, newName) {
+  return ee.Image.cat(bandImgs.map(function(im) { return im.gt(0); }))
+    .reduce(ee.Reducer.sum())
+    .rename(newName);
+}
+var bareAYears = yearsWith(bareAY, 'bareA_years');
+var bareBYears = yearsWith(bareBY, 'bareB_years');
+
+// Mevsimsel sayımlar (valid + bareA + bareB)
+var seasonValid = SEASONS.map(function(s) { return sumBand(bySeason(s), 'valid', 'valid_' + s); });
+var seasonBareA = SEASONS.map(function(s) { return sumBand(bySeason(s), 'bareA', 'bareA_' + s); });
+var seasonBareB = SEASONS.map(function(s) { return sumBand(bySeason(s), 'bareB', 'bareB_' + s); });
+
+
+// ------------------------------------------------------------
+// 8. ANA SONUÇ IMAGE
+// Sayımlar Int16, frekanslar Float32
+// ------------------------------------------------------------
+
+var counts = ee.Image.cat(
+  validY.concat(bareAY, bareBY,
+    [validTotal, bareATotal, bareBTotal, bareAYears, bareBYears],
+    seasonValid, seasonBareA, seasonBareB)
+).toInt16();
+
+var result = ee.Image.cat([counts, bareAFreq.toFloat(), bareBFreq.toFloat()])
+  .clip(aoi);
+
+print('Ana sonuç image (28 bant beklenir):', result);
+
+
+// ------------------------------------------------------------
+// 9. AY BAZLI DAĞILIM (ayrı image)
+// ------------------------------------------------------------
+
+var monthlyBands = [];
+for (var m = 1; m <= 12; m++) {
+  monthlyBands.push(sumBand(byMonth(m), 'valid', 'valid_m' + pad2(m)));
+}
+for (var m2 = 1; m2 <= 12; m2++) {
+  monthlyBands.push(sumBand(byMonth(m2), 'bareA', 'bareA_m' + pad2(m2)));
+}
+for (var m3 = 1; m3 <= 12; m3++) {
+  monthlyBands.push(sumBand(byMonth(m3), 'bareB', 'bareB_m' + pad2(m3)));
+}
+var monthly = ee.Image.cat(monthlyBands).toInt16().clip(aoi);
+
+
+// ------------------------------------------------------------
+// 10. DUYARLILIK IMAGE (ana maskeyi DEĞİŞTİRMEZ)
+// ------------------------------------------------------------
+
+var validAltTotal   = sumBand(daily, 'validAlt', 'validAlt_total');
+var bareA8Total     = sumBand(daily, 'bareA_ndvi8', 'bareA_ndvi8_total');
+var bareANoSclTotal = sumBand(daily, 'bareA_noSCL5', 'bareA_noSCL5_total');
+
+var bareA8Freq = bareA8Total.divide(validTotal)
+  .updateMask(validTotal.gt(0)).rename('bareA_ndvi8_freq');
+var bareANoSclFreq = bareANoSclTotal.divide(validAltTotal)
+  .updateMask(validAltTotal.gt(0)).rename('bareA_noSCL5_freq');
+
+// Fark katmanları (ana Maske A'ya göre)
+var dBareNdvi8 = bareA8Total.subtract(bareATotal).rename('d_bareA_ndvi8_minus_A');
+var dBareNoScl = bareANoSclTotal.subtract(bareATotal).rename('d_bareA_noSCL5_minus_A');
+
+var sens = ee.Image.cat([
+    validAltTotal, bareA8Total, bareANoSclTotal,
+    dBareNdvi8, dBareNoScl
+  ]).toInt16()
+  .addBands([bareA8Freq.toFloat(), bareANoSclFreq.toFloat()])
+  .clip(aoi);
+
+print('Duyarlılık image:', sens);
+
+
+// ------------------------------------------------------------
+// 11. AOI ÖZET İSTATİSTİKLERİ (mean + yüzdelikler)
+// Keyfi eşik yok: önce gerçek dağılımı görmek için.
+// ------------------------------------------------------------
+
+var reducer = ee.Reducer.mean().combine({
+  reducer2: ee.Reducer.percentile([5, 25, 50, 75, 95]),
+  sharedInputs: true
+});
+
+var summaryDict = result.reduceRegion({
+  reducer: reducer,
+  geometry: aoi,
+  crs: CRS,
+  scale: SCALE,
+  maxPixels: 1e10,
+  tileScale: 8
+});
+
+print('AOI özet istatistikleri:', summaryDict);
+
+
+// ------------------------------------------------------------
+// 12. HARİTA
+// ------------------------------------------------------------
+
+Map.addLayer(validTotal.clip(aoi),
+  {min: 0, max: 150, palette: ['FFFFFF', 'FFF7BC', 'FEC44F', 'D95F0E', '7F0000']},
+  'valid_total (gün)', false);
+
+Map.addLayer(bareATotal.clip(aoi),
+  {min: 0, max: 40, palette: ['FFFFFF', 'FFF7BC', 'FEC44F', 'FE9929', 'D95F0E', '993404']},
+  'Maske A - bare_total (gün)', true);
+
+Map.addLayer(bareBTotal.clip(aoi),
+  {min: 0, max: 40, palette: ['FFFFFF', 'EDF8FB', 'B2E2E2', '66C2A4', '2CA25F', '006D2C']},
+  'Maske B - bare_total (gün)', false);
+
+Map.addLayer(bareAFreq.clip(aoi),
+  {min: 0, max: 0.5, palette: ['FFFFFF', 'FFFFCC', 'C2E699', '78C679', '31A354', '006837']},
+  'Maske A - freq', false);
+
+Map.addLayer(bareAYears.clip(aoi),
+  {min: 0, max: 3, palette: ['FFFFFF', 'FEE8C8', 'FDBB84', 'E34A33']},
+  'Maske A - görülen yıl sayısı', false);
+
+Map.addLayer(seasonBareA[2].clip(aoi),
+  {min: 0, max: 20, palette: ['FFFFFF', 'FFF7BC', 'FEC44F', 'D95F0E']},
+  'Maske A - yaz (bare gün)', false);
+
+Map.addLayer(dBareNoScl.clip(aoi),
+  {min: 0, max: 20, palette: ['FFFFFF', 'DEEBF7', '6BAED6', '08519C']},
+  'S2: noSCL5 - A (ek gün)', false);
+
+
+// ------------------------------------------------------------
+// 13. EXPORT (CRS ve ölçek sabit)
+// ------------------------------------------------------------
+
+Export.image.toAsset({
+  image: result,
+  description: 'Menemen_S2_BareSoil_2017_2019_v2',
+  assetId: ASSET_PREFIX,
+  region: aoi,
+  crs: CRS,
+  scale: SCALE,
+  maxPixels: 1e10
+});
+
+Export.image.toAsset({
+  image: monthly,
+  description: 'Menemen_S2_BareSoil_2017_2019_v2_monthly',
+  assetId: ASSET_PREFIX + '_monthly',
+  region: aoi,
+  crs: CRS,
+  scale: SCALE,
+  maxPixels: 1e10
+});
+
+Export.image.toAsset({
+  image: sens,
+  description: 'Menemen_S2_BareSoil_2017_2019_v2_sens',
+  assetId: ASSET_PREFIX + '_sens',
+  region: aoi,
+  crs: CRS,
+  scale: SCALE,
+  maxPixels: 1e10
+});
+
+Export.table.toAsset({
+  collection: ee.FeatureCollection([ee.Feature(null, summaryDict)]),
+  description: 'Menemen_S2_BareSoil_2017_2019_v2_summary',
+  assetId: ASSET_PREFIX + '_summary'
+});
+
+
+// ------------------------------------------------------------
+// BİTTİ
+// ------------------------------------------------------------
+
+print('-------------------------------------------');
+print('MENEMEN S2 KURU ÇIPLAK TOPRAK GÖZLENEBİLİRLİĞİ v02');
+print('Dönem:', START, '-', END, '(END hariç)');
+print('Gözlem birimi: UTC takvim günü (günlük mozaik, band bazında max)');
+print('Maske A: SCL=5 + NDVI(B8A)<0.25 + NDMI<0');
+print('Maske B: A + NBR2<0.075');
+print('CRS/ölçek:', CRS, SCALE, 'm');
+print('-------------------------------------------');
